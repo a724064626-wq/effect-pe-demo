@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>拍摄特效包 PE · V0.5 / V1.0 产品方案 Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============ NAV ============ -->
+  <nav class="nav">
+    <div class="nav__inner">
+      <div class="nav__logo">
+        <span class="nav__logo-mark">PE</span>
+        <span class="nav__logo-text">拍摄特效包 · 开放能力</span>
+      </div>
+      <ul class="nav__links">
+        <li><a href="#overview">概览</a></li>
+        <li><a href="#roadmap">演进路径</a></li>
+        <li><a href="#v05">V0.5 极速版</a></li>
+        <li><a href="#v10">V1.0 标准版</a></li>
+        <li><a href="#compare">能力对比</a></li>
+      </ul>
+      <a href="#v05" class="nav__cta">立即体验 →</a>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <div class="hero__bg">
+      <div class="orb orb-a"></div>
+      <div class="orb orb-b"></div>
+      <div class="orb orb-c"></div>
+    </div>
+    <div class="hero__content">
+      <div class="hero__pill">
+        <span class="hero__pill-dot"></span>
+        Vimo × 剪映创作者生态 · AI 特效生产平台
+      </div>
+      <h1 class="hero__title">
+        把特效生产<br/>
+        <span class="grad">从「自动复刻」</span><br/>
+        升级为<span class="grad-2">「创作者自助」</span>
+      </h1>
+      <p class="hero__sub">
+        基于 V0.5 极速版与 V1.0 标准版的产品方案 Demo —— 直观感受指令解析、AI 贴纸生成与一键导出剪映特效包的完整链路。
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#v05">▶ 体验 V0.5 极速版</a>
+        <a class="btn btn--ghost" href="#v10">体验 V1.0 标准版</a>
+      </div>
+      <div class="hero__stats">
+        <div class="stat"><div class="stat__num">15s</div><div class="stat__label">视频/截图输入</div></div>
+        <div class="stat"><div class="stat__num">3+</div><div class="stat__label">AI 候选结果</div></div>
+        <div class="stat"><div class="stat__num">1‑Click</div><div class="stat__label">导出至 Vimo</div></div>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="phone__screen">
+          <div class="phone__cam"></div>
+          <div class="sticker sticker-1">✨ Sparkle</div>
+          <div class="sticker sticker-2">🌸 Bloom</div>
+          <div class="sticker sticker-3">💄 Soft Glow</div>
+          <div class="phone__face"></div>
+          <div class="phone__filter">FILTER · 暮光</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ OVERVIEW ============ -->
+  <section id="overview" class="section">
+    <div class="section__head">
+      <div class="kicker">PRODUCT OVERVIEW</div>
+      <h2>核心目标 · 打造完整的 AI 特效生产平台</h2>
+      <p class="section__lead">
+        当前生产链路依赖视频复刻，设计师无法自主生产，且尚未接入剪映创作者生态。我们通过 V0.5 → V1.0 → V2.0 三阶段演进，逐步把生产权交还给创作者。
+      </p>
+    </div>
+    <div class="cards">
+      <div class="card card--issue">
+        <div class="card__icon">⚠️</div>
+        <h3>背景与现状</h3>
+        <ul class="bullets">
+          <li>生产链路依赖视频复刻</li>
+          <li>设计师无法自主生产</li>
+          <li>尚未接入剪映创作者生态</li>
+        </ul>
+      </div>
+      <div class="card card--goal">
+        <div class="card__icon">🎯</div>
+        <h3>核心目标</h3>
+        <p>将特效生产从「<b>自动化复刻</b>」升级为「<b>创作者自主生产</b>」，打造完整的 AI 特效生产平台。</p>
+      </div>
+      <div class="card card--out">
+        <div class="card__icon">📦</div>
+        <h3>核心输出</h3>
+        <p>统一产物为<b>标准剪映特效资源包</b>，支持一键上传至 <b>Vimo 平台</b>，无缝接入创作者生态。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROADMAP ============ -->
+  <section id="roadmap" class="section section--dark">
+    <div class="section__head">
+      <div class="kicker">ROADMAP</div>
+      <h2>三阶段演进路径</h2>
+    </div>
+    <div class="roadmap">
+      <div class="roadmap__line"></div>
+      <div class="rm rm--current">
+        <div class="rm__dot"></div>
+        <div class="rm__tag">V0.5</div>
+        <h3>极速版（内部应急）</h3>
+        <p>侧重于<b>组合硬指令</b>（贴纸 / 滤镜 / 妆容 ID）解析与复刻；支持 15s 以内视频和截图输入；无画布编辑。</p>
+        <span class="rm__chip">Phase 1 · 进行中</span>
+      </div>
+      <div class="rm rm--next">
+        <div class="rm__dot"></div>
+        <div class="rm__tag">V1.0</div>
+        <h3>标准版（创作者自助）</h3>
+        <p>引入<b>自然语言指令</b>（主题 + 位置 + 风格）；AI 生成贴纸素材并提供<b>多套候选结果</b>。</p>
+        <span class="rm__chip">Phase 2 · 设计中</span>
+      </div>
+      <div class="rm rm--future">
+        <div class="rm__dot"></div>
+        <div class="rm__tag">V2.0</div>
+        <h3>增强版（全链路生产）</h3>
+        <p>可视化<b>画布编辑</b>，支持拖拽 / 缩放 / 旋转贴纸；实时调整妆容和滤镜强度。</p>
+        <span class="rm__chip">Phase 3 · 规划中</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ V0.5 ============ -->
+  <section id="v05" class="section">
+    <div class="section__head">
+      <div class="kicker kicker--v05">V0.5 · 极速版</div>
+      <h2>双路输入 · 极速复刻</h2>
+      <p class="section__lead">
+        贴纸支持两条独立输入路线 —— <b>路线 A：上传参考视频/截图</b>（AI 自动识别贴纸效果），<b>路线 B：手动指定贴纸 ID</b>。<br/>
+        滤镜与妆容 ID 在两条路线下都可选填，留空则由 AI 自动匹配最优组合。
+      </p>
+    </div>
+
+    <!-- Flow Diagram - dual route -->
+    <div class="flow flow--dual">
+      <div class="flow__routes">
+        <div class="flow__route flow__route--a">
+          <span class="flow__route-tag">路线 A</span>
+          <div class="flow__step"><span class="flow__num">1</span><span>📹 上传参考视频/截图</span></div>
+          <div class="flow__arrow">→</div>
+          <div class="flow__step"><span class="flow__num">2</span><span>🔍 AI 识别贴纸效果</span></div>
+        </div>
+        <div class="flow__route-or">OR</div>
+        <div class="flow__route flow__route--b">
+          <span class="flow__route-tag flow__route-tag--b">路线 B</span>
+          <div class="flow__step"><span class="flow__num">1</span><span>🔧 手动指定贴纸 ID</span></div>
+        </div>
+      </div>
+      <div class="flow__merge">
+        <div class="flow__step flow__step--shared"><span class="flow__num">+</span><span>🎨 滤镜 / 妆容 ID（可选 · 留空 AI 匹配）</span></div>
+        <div class="flow__arrow">→</div>
+        <div class="flow__step"><span class="flow__num">⚡</span><span>解析复刻</span></div>
+        <div class="flow__arrow">→</div>
+        <div class="flow__step"><span class="flow__num">📦</span><span>导出剪映特效包</span></div>
+      </div>
+    </div>
+
+    <!-- Interactive Demo V0.5 -->
+    <div class="demo demo--v05">
+      <div class="demo__header">
+        <div class="demo__tabs">
+          <span class="demo__tab demo__tab--active">设计师工作台 · V0.5</span>
+        </div>
+        <div class="demo__dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="demo__body demo__body--v05">
+        <!-- LEFT : Route Switcher + Inputs -->
+        <div class="panel">
+          <h4 class="panel__title">① 选择贴纸输入路线</h4>
+          <div class="route-switch" role="tablist">
+            <button class="route-tab route-tab--active" data-route="A" role="tab">
+              <span class="route-tab__tag">A</span>
+              <span class="route-tab__label">参考视频/截图</span>
+              <span class="route-tab__sub">AI 自动识别</span>
+            </button>
+            <button class="route-tab" data-route="B" role="tab">
+              <span class="route-tab__tag route-tab__tag--b">B</span>
+              <span class="route-tab__label">手动指定 ID</span>
+              <span class="route-tab__sub">直连资源库</span>
+            </button>
+          </div>
+
+          <!-- Route A : Upload -->
+          <div class="route-pane route-pane--active" data-pane="A">
+            <h4 class="panel__title" style="margin-top:18px;">② 上传参考素材</h4>
+            <div class="upload" id="v05Upload">
+              <div class="upload__icon">📁</div>
+              <div class="upload__hint">点击或拖拽 <b>15s 内视频</b> / 截图</div>
+              <div class="upload__limit">支持 .mp4 / .mov / .png · ≤ 15s</div>
+            </div>
+            <div class="upload__preview" id="v05Preview">
+              <div class="upload__thumb">🎬<div class="bar"></div></div>
+              <div class="upload__meta"><b>reference_clip.mp4</b><span>00:12 · 1080×1920 · 已就绪</span></div>
+            </div>
+            <div class="route-hint">
+              <span class="route-hint__icon">🤖</span>
+              AI 将自动识别参考素材中的贴纸位置、形态与动效，无需手动填写贴纸 ID。
+            </div>
+          </div>
+
+          <!-- Route B : STK ID -->
+          <div class="route-pane" data-pane="B">
+            <h4 class="panel__title" style="margin-top:18px;">② 手动指定贴纸 ID / 名称</h4>
+            <div class="id-group" data-kind="STK">
+              <label>贴纸 <span class="id-pill">STK</span> <span class="required">必填</span></label>
+              <input class="id-input" id="stkId" type="text" value="STK_2034_sparkle" placeholder="输入精确 ID 或名称模糊搜索（如「樱花」）" autocomplete="off" />
+            </div>
+            <details class="info-hint info-hint--collapsible">
+              <summary class="info-hint__summary">
+                <span class="info-hint__summary-text"><span>🔍</span> 查看支持的输入方式与检索说明</span>
+                <span class="info-hint__chevron" aria-hidden="true">▾</span>
+              </summary>
+              <ul class="info-hint__list">
+                <li>直接粘贴精确 ID，例如 <code class="hint-code">STK_2034_sparkle</code></li>
+                <li>输入名称（如「樱花」「星光」），系统会模糊匹配 Top 3 候选供选择</li>
+              </ul>
+            </details>
+          </div>
+
+          <!-- Shared : FLT + MUA optional -->
+          <h4 class="panel__title" style="margin-top:24px;">③ 滤镜 / 妆容 <span class="panel__hint">可选 · 留空由 AI 匹配 · 支持名称模糊搜索</span></h4>
+          <details class="info-hint info-hint--shared info-hint--collapsible">
+            <summary class="info-hint__summary">
+              <span class="info-hint__summary-text"><span>💡</span> 滤镜 / 妆容 检索方式说明</span>
+              <span class="info-hint__chevron" aria-hidden="true">▾</span>
+            </summary>
+            <ul class="info-hint__list">
+              <li>输入精确 ID（如 <code class="hint-code">FLT_dusk_warm</code> / <code class="hint-code">MUA_softgloss_v3</code>）直接命中</li>
+              <li>输入名称（如「暮光」「霓虹」「软光」「红唇」）系统自动给出 Top 3 候选</li>
+              <li>留空或点击 🤖 AI 自动 → 由系统智能匹配最优组合</li>
+            </ul>
+          </details>
+          <div class="id-group" data-kind="FLT">
+            <label>
+              滤镜 <span class="id-pill id-pill--b">FLT</span>
+              <span class="optional">可选</span>
+              <button class="ai-toggle" data-target="fltId" type="button">🤖 AI 自动</button>
+            </label>
+            <input class="id-input" id="fltId" type="text" value="FLT_dusk_warm" placeholder="ID 或名称（如「暮光」「霓虹」）· 留空 AI 匹配" autocomplete="off" />
+          </div>
+          <div class="id-group" data-kind="MUA">
+            <label>
+              妆容 <span class="id-pill id-pill--c">MUA</span>
+              <span class="optional">可选</span>
+              <button class="ai-toggle" data-target="muaId" type="button">🤖 AI 自动</button>
+            </label>
+            <input class="id-input" id="muaId" type="text" value="MUA_softgloss_v3" placeholder="ID 或名称（如「软光」「裸妆」）· 留空 AI 匹配" autocomplete="off" />
+          </div>
+
+          <button class="btn btn--primary btn--full" id="v05Run">⚡ 一键复刻</button>
+        </div>
+
+        <!-- MIDDLE : Preview -->
+        <div class="panel preview">
+          <h4 class="panel__title">④ 实时预览</h4>
+          <div class="preview__phone">
+            <div class="preview__screen" id="v05Screen">
+              <div class="preview__placeholder">等待复刻 · 还未生成预览</div>
+            </div>
+          </div>
+          <div class="preview__caption" id="v05Caption">— 尚未运行 —</div>
+        </div>
+
+        <!-- RIGHT : Parse Log + Output -->
+        <div class="panel">
+          <h4 class="panel__title">⑤ 解析日志</h4>
+          <div class="log" id="v05Log">
+            <div class="log__line log__line--muted">[ idle ] 等待执行硬指令复刻...</div>
+          </div>
+
+          <h4 class="panel__title" style="margin-top:24px;">⑥ 产出</h4>
+          <div class="export" id="v05Export">
+            <div class="export__placeholder">运行后将生成剪映特效资源包</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V0.5 Highlights -->
+    <div class="highlights">
+      <div class="hl">
+        <div class="hl__icon">🔀</div>
+        <h4>双路输入</h4>
+        <p>路线 A 上传参考素材 AI 识别 / 路线 B 手动指定贴纸 ID，按场景自由切换。</p>
+      </div>
+      <div class="hl">
+        <div class="hl__icon">🤖</div>
+        <h4>AI 智能补全</h4>
+        <p>滤镜与妆容 ID 留空时，AI 自动匹配最优组合，零配置也可产出。</p>
+      </div>
+      <div class="hl">
+        <div class="hl__icon">📦</div>
+        <h4>标准产物</h4>
+        <p>统一输出标准剪映特效资源包，可直接进入 Vimo 上线流程。</p>
+      </div>
+      <div class="hl hl--limit">
+        <div class="hl__icon">🚧</div>
+        <h4>能力边界</h4>
+        <p>暂不支持自然语言指令、AI 原创贴纸生成、画布编辑（V1.0 / V2.0 提供）。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ V1.0 ============ -->
+  <section id="v10" class="section section--accent">
+    <div class="section__head">
+      <div class="kicker kicker--v10">V1.0 · 标准版</div>
+      <h2>对话式 AI BOT · 多轮收敛 · 智能生产</h2>
+      <p class="section__lead">
+        创作者只需用一句话描述大致方向，AI BOT 主动追问主题、场景、风格等关键信息，逐步收敛需求；
+        最终自动决策「AI 原创生成」或「素材库匹配」，并产出多套候选结果。
+      </p>
+    </div>
+
+    <!-- Flow Diagram -->
+    <div class="flow flow--v10">
+      <div class="flow__step"><span class="flow__num">1</span><span>💬 描述大致方向</span></div>
+      <div class="flow__arrow">→</div>
+      <div class="flow__step"><span class="flow__num">2</span><span>🤝 BOT 多轮追问</span></div>
+      <div class="flow__arrow">→</div>
+      <div class="flow__step"><span class="flow__num">3</span><span>📋 风格选型确认</span></div>
+      <div class="flow__arrow">→</div>
+      <div class="flow__step"><span class="flow__num">4</span><span>🤖 AI 生成 / 素材库匹配</span></div>
+      <div class="flow__arrow">→</div>
+      <div class="flow__step"><span class="flow__num">5</span><span>🎨 多套候选</span></div>
+      <div class="flow__arrow">→</div>
+      <div class="flow__step"><span class="flow__num">6</span><span>📦 导出特效包</span></div>
+    </div>
+
+    <!-- Interactive Demo V1.0 -->
+    <div class="demo demo--v10">
+      <div class="demo__header">
+        <div class="demo__tabs">
+          <span class="demo__tab demo__tab--active">创作者工作台 · V1.0</span>
+        </div>
+        <div class="demo__dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="demo__body demo__body--v10">
+        <!-- LEFT : Chat Bot -->
+        <div class="panel panel--chat">
+          <div class="bot-head">
+            <div class="bot-avatar">✨</div>
+            <div>
+              <div class="bot-name">特效 AI · BOT</div>
+              <div class="bot-status"><span class="bot-dot"></span> 在线 · 多轮对话模式</div>
+            </div>
+            <button class="bot-reset" id="v10Reset" title="重置对话">↻</button>
+          </div>
+
+          <div class="chat" id="chat">
+            <!-- Messages dynamically injected -->
+          </div>
+
+          <div class="chat-quickreplies" id="quickReplies"></div>
+
+          <div class="chat-input" id="chatInputBox">
+            <input type="text" id="chatInput" placeholder="向 BOT 描述你想要的特效方向..." autocomplete="off" />
+            <button class="chat-send" id="chatSend" title="发送">➤</button>
+          </div>
+
+          <div class="spec-card" id="specCard" hidden>
+            <div class="spec-card__head">
+              <span class="spec-card__icon">📋</span>
+              <span class="spec-card__title">风格选型已确认</span>
+            </div>
+            <div class="spec-card__body" id="specBody"></div>
+            <button class="btn btn--accent btn--full" id="v10Run">🤖 生成候选</button>
+          </div>
+        </div>
+
+        <!-- MIDDLE : Candidates -->
+        <div class="panel">
+          <h4 class="panel__title">② 多套候选 <span class="panel__hint">AI 原创 + 素材库混合</span></h4>
+          <div class="candidates" id="candidates">
+            <div class="cand cand--placeholder">
+              <div class="cand__icon">💬</div>
+              <div>请先与 BOT 完成对话<br/>系统将自动产出 3 套候选</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT : Preview + Export -->
+        <div class="panel">
+          <h4 class="panel__title">③ 选中预览</h4>
+          <div class="preview__phone preview__phone--v10">
+            <div class="preview__screen" id="v10Screen">
+              <div class="preview__placeholder">请选择一套候选查看效果</div>
+            </div>
+          </div>
+          <div class="preview__caption" id="v10Caption">— 尚未选择 —</div>
+
+          <h4 class="panel__title" style="margin-top:24px;">④ 一键导出</h4>
+          <div class="export" id="v10Export">
+            <div class="export__placeholder">选择候选后可导出至 Vimo 平台</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- V1.0 Highlights -->
+    <div class="highlights">
+      <div class="hl hl--accent">
+        <div class="hl__icon">💬</div>
+        <h4>对话式输入</h4>
+        <p>一句话描述方向，BOT 主动追问，告别复杂表单，零学习成本。</p>
+      </div>
+      <div class="hl hl--accent">
+        <div class="hl__icon">🤝</div>
+        <h4>多轮收敛</h4>
+        <p>追问主题 / 场景 / 风格 / 受众，逐步澄清，避免一次性给错指令。</p>
+      </div>
+      <div class="hl hl--accent">
+        <div class="hl__icon">🧠</div>
+        <h4>智能决策</h4>
+        <p>BOT 自动判断「AI 原创生成」或「素材库精准匹配」，效率与质感兼顾。</p>
+      </div>
+      <div class="hl hl--accent">
+        <div class="hl__icon">🎨</div>
+        <h4>多套候选</h4>
+        <p>3 套差异化结果并行产出，并标注出处（AI / 素材库）便于决策。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMPARE ============ -->
+  <section id="compare" class="section">
+    <div class="section__head">
+      <div class="kicker">CAPABILITY MATRIX</div>
+      <h2>V0.5 vs V1.0 能力对比</h2>
+    </div>
+    <div class="compare">
+      <table class="cmp">
+        <thead>
+          <tr>
+            <th>能力维度</th>
+            <th><span class="cmp__tag cmp__tag--v05">V0.5 极速版</span></th>
+            <th><span class="cmp__tag cmp__tag--v10">V1.0 标准版</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>定位</td><td>内部应急 · 设计师生产</td><td>创作者自助 · 公开生态</td></tr>
+          <tr><td>贴纸输入路径</td><td>路线 A 上传参考素材 / 路线 B 手动 ID</td><td>对话式 BOT · 多轮追问</td></tr>
+          <tr><td>指令形式</td><td>组合硬指令 + AI 自动补全</td><td>自然语言 + BOT 引导</td></tr>
+          <tr><td>素材输入</td><td>15s 视频 / 截图 / 直接指定 ID</td><td>纯文本对话 · 无需上传</td></tr>
+          <tr><td>AI 原创生成贴纸</td><td><span class="x">✗</span></td><td><span class="v">✓</span></td></tr>
+          <tr><td>素材库匹配</td><td><span class="v">✓（指定 ID）</span></td><td><span class="v">✓（BOT 智能匹配）</span></td></tr>
+          <tr><td>多轮对话</td><td><span class="x">✗</span></td><td><span class="v">✓</span></td></tr>
+          <tr><td>多套候选</td><td><span class="x">✗</span></td><td><span class="v">✓ 3 套（AI + 素材库混合）</span></td></tr>
+          <tr><td>画布编辑</td><td><span class="x">✗</span></td><td><span class="x">✗（V2.0 提供）</span></td></tr>
+          <tr><td>产出 / 分发</td><td>标准剪映特效包 · 一键上传 Vimo</td><td>标准剪映特效包 · 一键上传 Vimo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div>
+        <div class="footer__logo">PE · 拍摄特效包开放能力</div>
+        <p>面向 Vimo × 剪映创作者生态，逐步释放 AI 特效生产力。</p>
+      </div>
+      <div class="footer__cols">
+        <div>
+          <h5>产品阶段</h5>
+          <ul>
+            <li>V0.5 极速版</li>
+            <li>V1.0 标准版</li>
+            <li>V2.0 增强版（规划）</li>
+          </ul>
+        </div>
+        <div>
+          <h5>核心能力</h5>
+          <ul>
+            <li>硬指令解析</li>
+            <li>自然语言生成</li>
+            <li>多候选 AI 贴纸</li>
+            <li>剪映特效包导出</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer__copy">© 2026 · 拍摄特效包 PE 开放能力 · Demo 演示用途</div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
