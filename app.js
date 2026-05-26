@@ -7,6 +7,93 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 /* =====================================================================
+   PASSWORD GATE (session-scoped, frontend-only — for demo gating)
+   ---------------------------------------------------------------------
+   - Password: "9527"
+   - On success, sessionStorage['pe_demo_pw_ok'] = '1'
+   - sessionStorage 在「同一标签页」内有效：
+       · 当前页面刷新 → 仍然解锁，无需再次输入
+       · 关闭标签页 / 新无痕窗口 / 换浏览器 → 重新拦截
+   - The <html> element gets/loses the `pw-locked` class to hide page content.
+   ===================================================================== */
+const PW_KEY = 'pe_demo_pw_ok';
+const PW_VALUE = '9527';
+
+function isPwUnlocked() {
+  try { return sessionStorage.getItem(PW_KEY) === '1'; }
+  catch (e) { return false; }
+}
+
+function unlockPw() {
+  try { sessionStorage.setItem(PW_KEY, '1'); } catch (e) {}
+  document.documentElement.classList.remove('pw-locked');
+  const gate = document.getElementById('passwordGate');
+  if (gate) {
+    gate.style.transition = 'opacity .25s ease';
+    gate.style.opacity = '0';
+    setTimeout(() => { gate.hidden = true; gate.style.opacity = ''; gate.style.transition = ''; }, 260);
+  }
+}
+
+function initPasswordGate() {
+  const gate    = document.getElementById('passwordGate');
+  const form    = document.getElementById('pwGateForm');
+  const input   = document.getElementById('pwGateInput');
+  const errorEl = document.getElementById('pwGateError');
+  if (!gate || !form || !input) return; // gate markup missing — fail open
+
+  if (isPwUnlocked()) {
+    // Already unlocked in this session → make sure the gate stays hidden.
+    document.documentElement.classList.remove('pw-locked');
+    gate.hidden = true;
+    return;
+  }
+
+  // Show the gate & focus its input.
+  gate.hidden = false;
+  // small delay so animation runs cleanly
+  setTimeout(() => { try { input.focus(); } catch (e) {} }, 80);
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const val = (input.value || '').trim();
+    if (val === PW_VALUE) {
+      if (errorEl) errorEl.hidden = true;
+      input.value = '';
+      unlockPw();
+      // Now that the page is unlocked, kick off the BOT conversation
+      // (the on-load call was no-oped while locked).
+      if (typeof startConversation === 'function') {
+        setTimeout(() => startConversation(), 200);
+      }
+    } else {
+      if (errorEl) {
+        errorEl.hidden = false;
+        // restart shake animation
+        errorEl.style.animation = 'none';
+        // eslint-disable-next-line no-unused-expressions
+        errorEl.offsetHeight;
+        errorEl.style.animation = '';
+      }
+      input.value = '';
+      input.focus();
+    }
+  });
+
+  // Re-hide error as soon as user starts typing again
+  input.addEventListener('input', () => {
+    if (errorEl && !errorEl.hidden) errorEl.hidden = true;
+  });
+}
+
+// Run gate init as soon as DOM is parsed.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPasswordGate);
+} else {
+  initPasswordGate();
+}
+
+/* =====================================================================
    V0.5 · 极速版 (Dual route: A=upload reference, B=manual STK ID)
    ===================================================================== */
 
@@ -498,7 +585,10 @@ async function botRespond() {
   } else {
     chatInput.disabled = false;
     chatSend.disabled = false;
-    chatInput.focus();
+    // NOTE: do NOT auto-focus the chat input on load —
+    // calling .focus() on an off-screen element causes the browser to
+    // auto-scroll the page down to the V1.0 chat panel on first paint.
+    // Users can click the input themselves to start typing.
   }
   waitingForBot = false;
 }
@@ -743,5 +833,8 @@ $$('a[href^="#"]').forEach(a => {
   });
 });
 
-/* Kick off V1.0 BOT conversation */
-startConversation();
+/* Kick off V1.0 BOT conversation (only if the password gate is already unlocked;
+   otherwise the gate's success handler will start the conversation after unlock) */
+if (isPwUnlocked()) {
+  startConversation();
+}

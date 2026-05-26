@@ -3,13 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>拍摄特效包 PE · V0.5 / V1.0 产品方案 Demo</title>
+  <title>拍摄特效包 PE · V0.5 / V1.0 / V2.0 产品方案 Demo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    // Inline early-gate: applied before body paints to avoid content flash.
+    // The actual UI/handlers live in app.js (search for "PASSWORD GATE").
+    (function () {
+      try {
+        var ok = sessionStorage.getItem('pe_demo_pw_ok') === '1';
+        if (!ok) {
+          // Add a class to <html> so CSS can hide the rest of the page until unlocked.
+          document.documentElement.classList.add('pw-locked');
+        }
+      } catch (e) { /* sessionStorage may be blocked — gate JS will still enforce it */ }
+    })();
+  </script>
 </head>
 <body>
+  <!-- ============ PASSWORD GATE (session-scoped) ============ -->
+  <div id="passwordGate" class="pw-gate" aria-modal="true" role="dialog" aria-labelledby="pwGateTitle" hidden>
+    <div class="pw-gate__backdrop"></div>
+    <div class="pw-gate__card">
+      <div class="pw-gate__logo">
+        <span class="pw-gate__logo-mark">PE</span>
+      </div>
+      <h2 id="pwGateTitle" class="pw-gate__title">访问验证</h2>
+      <p class="pw-gate__sub">本 Demo 仅向受邀用户开放，请输入访问密码继续浏览。</p>
+      <form id="pwGateForm" class="pw-gate__form" autocomplete="off" novalidate>
+        <input
+          id="pwGateInput"
+          class="pw-gate__input"
+          type="password"
+          inputmode="numeric"
+          placeholder="请输入访问密码"
+          aria-label="访问密码"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button type="submit" class="pw-gate__btn">进入 Demo →</button>
+      </form>
+      <div id="pwGateError" class="pw-gate__error" hidden>密码不正确，请重试</div>
+      <div class="pw-gate__foot">© 2026 · 拍摄特效包 PE 开放能力 · Demo 演示用途</div>
+    </div>
+  </div>
+
   <!-- ============ NAV ============ -->
   <nav class="nav">
     <div class="nav__inner">
@@ -22,6 +62,7 @@
         <li><a href="#roadmap">演进路径</a></li>
         <li><a href="#v05">V0.5 极速版</a></li>
         <li><a href="#v10">V1.0 标准版</a></li>
+        <li><a href="#v20">V2.0 增强版 <span class="nav__wip">WIP</span></a></li>
         <li><a href="#compare">能力对比</a></li>
       </ul>
       <a href="#v05" class="nav__cta">立即体验 →</a>
@@ -143,33 +184,9 @@
       <div class="kicker kicker--v05">V0.5 · 极速版</div>
       <h2>双路输入 · 极速复刻</h2>
       <p class="section__lead">
-        贴纸支持两条独立输入路线 —— <b>路线 A：上传参考视频/截图</b>（AI 自动识别贴纸效果），<b>路线 B：手动指定贴纸 ID</b>。<br/>
+        贴纸支持两条独立输入路线 —— <b>路线 A：上传参考视频/截图</b>（AI 自动识别复刻已有贴纸，或基于参考素材原创生成全新贴纸），<b>路线 B：手动指定贴纸 ID</b>。<br/>
         滤镜与妆容 ID 在两条路线下都可选填，留空则由 AI 自动匹配最优组合。
       </p>
-    </div>
-
-    <!-- Flow Diagram - dual route -->
-    <div class="flow flow--dual">
-      <div class="flow__routes">
-        <div class="flow__route flow__route--a">
-          <span class="flow__route-tag">路线 A</span>
-          <div class="flow__step"><span class="flow__num">1</span><span>📹 上传参考视频/截图</span></div>
-          <div class="flow__arrow">→</div>
-          <div class="flow__step"><span class="flow__num">2</span><span>🔍 AI 识别贴纸效果</span></div>
-        </div>
-        <div class="flow__route-or">OR</div>
-        <div class="flow__route flow__route--b">
-          <span class="flow__route-tag flow__route-tag--b">路线 B</span>
-          <div class="flow__step"><span class="flow__num">1</span><span>🔧 手动指定贴纸 ID</span></div>
-        </div>
-      </div>
-      <div class="flow__merge">
-        <div class="flow__step flow__step--shared"><span class="flow__num">+</span><span>🎨 滤镜 / 妆容 ID（可选 · 留空 AI 匹配）</span></div>
-        <div class="flow__arrow">→</div>
-        <div class="flow__step"><span class="flow__num">⚡</span><span>解析复刻</span></div>
-        <div class="flow__arrow">→</div>
-        <div class="flow__step"><span class="flow__num">📦</span><span>导出剪映特效包</span></div>
-      </div>
     </div>
 
     <!-- Interactive Demo V0.5 -->
@@ -189,7 +206,7 @@
             <button class="route-tab route-tab--active" data-route="A" role="tab">
               <span class="route-tab__tag">A</span>
               <span class="route-tab__label">参考视频/截图</span>
-              <span class="route-tab__sub">AI 自动识别</span>
+              <span class="route-tab__sub">AI 识别复刻 / 原创生成</span>
             </button>
             <button class="route-tab" data-route="B" role="tab">
               <span class="route-tab__tag route-tab__tag--b">B</span>
@@ -212,7 +229,12 @@
             </div>
             <div class="route-hint">
               <span class="route-hint__icon">🤖</span>
-              AI 将自动识别参考素材中的贴纸位置、形态与动效，无需手动填写贴纸 ID。
+              <span>
+                上传参考素材后，AI 会自动给出 <b>两类结果</b>：
+                <b>① 识别复刻</b> —— 命中现有贴纸库中的同款贴纸；
+                <b>② 原创生成</b> —— 基于参考素材的风格 / 形态 / 动效，由 AI 原创生成全新贴纸。
+                两类结果会并列展示，由你择优选用，<b>无需手动填写贴纸 ID</b>。
+              </span>
             </div>
           </div>
 
@@ -437,6 +459,196 @@
         <div class="hl__icon">🎨</div>
         <h4>多套候选</h4>
         <p>3 套差异化结果并行产出，并标注出处（AI / 素材库）便于决策。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ V2.0 (WIP placeholder / mockup) ============ -->
+  <section id="v20" class="section section--v20">
+    <div class="section__head">
+      <div class="kicker kicker--v20">V2.0 · 增强版</div>
+      <h2>可视化画布 · 全链路自助生产 <span class="wip-badge">WIP · 探索中</span></h2>
+      <p class="section__lead">
+        在 V1.0 对话式生产之上，V2.0 计划开放<b>可视化画布编辑</b>与<b>实时参数微调</b>，
+        让创作者直接在画布上拖拽、缩放贴纸，并通过侧边面板细调滤镜与妆容强度。
+        当前为产品方向的低保真示意，<b>暂不支持交互</b>，敬请期待。
+      </p>
+    </div>
+
+    <div class="demo demo--v20" aria-disabled="true">
+      <!-- WIP diagonal watermark -->
+      <div class="wip-watermark" aria-hidden="true">
+        <span>仍在探索中 · WORK IN PROGRESS · 敬请期待</span>
+        <span>仍在探索中 · WORK IN PROGRESS · 敬请期待</span>
+        <span>仍在探索中 · WORK IN PROGRESS · 敬请期待</span>
+      </div>
+
+      <div class="demo__header">
+        <div class="demo__tabs">
+          <span class="demo__tab demo__tab--active">创作者工作台 · V2.0（敬请期待）</span>
+        </div>
+        <div class="demo__dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="demo__body demo__body--v20">
+        <!-- LEFT : Layer / Asset list -->
+        <aside class="v20-panel v20-panel--layers">
+          <div class="v20-panel__title">📚 图层 / 素材</div>
+          <ul class="v20-layers">
+            <li class="v20-layers__item v20-layers__item--active">
+              <span class="v20-chip v20-chip--stk">STK</span>
+              <span class="v20-layers__name">樱花花瓣 · 主体</span>
+              <span class="v20-layers__eye">👁</span>
+            </li>
+            <li class="v20-layers__item">
+              <span class="v20-chip v20-chip--flt">FLT</span>
+              <span class="v20-layers__name">暮光暖色滤镜</span>
+              <span class="v20-layers__eye">👁</span>
+            </li>
+            <li class="v20-layers__item">
+              <span class="v20-chip v20-chip--mua">MUA</span>
+              <span class="v20-layers__name">软光红唇</span>
+              <span class="v20-layers__eye">👁</span>
+            </li>
+            <li class="v20-layers__item v20-layers__item--add">
+              <span class="v20-layers__plus">＋</span>
+              <span class="v20-layers__name">添加新图层</span>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- CENTER : Canvas Editor (drag/scale stickers placeholder) -->
+        <div class="v20-canvas">
+          <div class="v20-canvas__toolbar">
+            <button class="v20-tool v20-tool--active" disabled>🖱 选择</button>
+            <button class="v20-tool" disabled>✋ 拖拽</button>
+            <button class="v20-tool" disabled>🔍 缩放</button>
+            <button class="v20-tool" disabled>↺ 旋转</button>
+            <span class="v20-tool__divider"></span>
+            <button class="v20-tool" disabled>↶ 撤销</button>
+            <button class="v20-tool" disabled>↷ 重做</button>
+          </div>
+
+          <div class="v20-canvas__stage" aria-label="可视化画布编辑区（占位）">
+            <!-- mock 9:16 phone-frame canvas with placeholder stickers -->
+            <div class="v20-stage__phone">
+              <div class="v20-stage__bg"></div>
+
+              <!-- Sticker placeholder 1 (selected) -->
+              <div class="v20-sticker v20-sticker--selected" style="top:18%; left:22%;">
+                <div class="v20-sticker__emoji">🌸</div>
+                <div class="v20-sticker__handles" aria-hidden="true">
+                  <span class="v20-h v20-h--tl"></span>
+                  <span class="v20-h v20-h--tr"></span>
+                  <span class="v20-h v20-h--bl"></span>
+                  <span class="v20-h v20-h--br"></span>
+                  <span class="v20-h v20-h--rot">↻</span>
+                </div>
+              </div>
+
+              <!-- Sticker placeholder 2 -->
+              <div class="v20-sticker" style="top:55%; left:60%;">
+                <div class="v20-sticker__emoji">🌺</div>
+              </div>
+
+              <!-- Sticker placeholder 3 -->
+              <div class="v20-sticker" style="top:72%; left:18%;">
+                <div class="v20-sticker__emoji">✨</div>
+              </div>
+
+              <div class="v20-stage__hint">画布编辑区 · 拖拽 / 缩放 / 旋转贴纸（示意）</div>
+            </div>
+          </div>
+
+          <div class="v20-canvas__statusbar">
+            <span>🖼 9:16 · 1080×1920</span>
+            <span>📐 选中：樱花花瓣 · 主体</span>
+            <span>🔒 占位示意 · 暂不可交互</span>
+          </div>
+        </div>
+
+        <!-- RIGHT : Parameter panel (sliders) -->
+        <aside class="v20-panel v20-panel--params">
+          <div class="v20-panel__title">🎛 参数调节</div>
+
+          <div class="v20-params__group">
+            <div class="v20-params__label">
+              <span>贴纸 · 缩放</span>
+              <span class="v20-params__value">1.20×</span>
+            </div>
+            <div class="v20-slider"><div class="v20-slider__fill" style="width:60%;"></div><div class="v20-slider__thumb" style="left:60%;"></div></div>
+          </div>
+
+          <div class="v20-params__group">
+            <div class="v20-params__label">
+              <span>贴纸 · 旋转</span>
+              <span class="v20-params__value">+12°</span>
+            </div>
+            <div class="v20-slider"><div class="v20-slider__fill" style="width:55%;"></div><div class="v20-slider__thumb" style="left:55%;"></div></div>
+          </div>
+
+          <div class="v20-params__divider"></div>
+
+          <div class="v20-params__group">
+            <div class="v20-params__label">
+              <span>滤镜 · 强度</span>
+              <span class="v20-params__value">68%</span>
+            </div>
+            <div class="v20-slider"><div class="v20-slider__fill" style="width:68%;"></div><div class="v20-slider__thumb" style="left:68%;"></div></div>
+          </div>
+
+          <div class="v20-params__group">
+            <div class="v20-params__label">
+              <span>滤镜 · 暖色 / 冷色</span>
+              <span class="v20-params__value">+15</span>
+            </div>
+            <div class="v20-slider"><div class="v20-slider__fill" style="width:62%;"></div><div class="v20-slider__thumb" style="left:62%;"></div></div>
+          </div>
+
+          <div class="v20-params__divider"></div>
+
+          <div class="v20-params__group">
+            <div class="v20-params__label">
+              <span>妆容 · 强度</span>
+              <span class="v20-params__value">42%</span>
+            </div>
+            <div class="v20-slider"><div class="v20-slider__fill" style="width:42%;"></div><div class="v20-slider__thumb" style="left:42%;"></div></div>
+          </div>
+
+          <div class="v20-params__group">
+            <div class="v20-params__label">
+              <span>妆容 · 唇色饱和度</span>
+              <span class="v20-params__value">75%</span>
+            </div>
+            <div class="v20-slider"><div class="v20-slider__fill" style="width:75%;"></div><div class="v20-slider__thumb" style="left:75%;"></div></div>
+          </div>
+
+          <button class="v20-export-btn" disabled>📦 导出剪映特效包（敬请期待）</button>
+        </aside>
+      </div>
+    </div>
+
+    <!-- V2.0 Highlights -->
+    <div class="highlights">
+      <div class="hl hl--v20">
+        <div class="hl__icon">🎨</div>
+        <h4>可视化画布</h4>
+        <p>所见即所得，直接在 9:16 画布上拖拽、缩放、旋转贴纸。</p>
+      </div>
+      <div class="hl hl--v20">
+        <div class="hl__icon">🎚</div>
+        <h4>实时参数微调</h4>
+        <p>滤镜 / 妆容强度毫秒级响应，告别"重新生成"等待。</p>
+      </div>
+      <div class="hl hl--v20">
+        <div class="hl__icon">🧩</div>
+        <h4>多图层组合</h4>
+        <p>贴纸 / 滤镜 / 妆容独立成层，可单独显示、隐藏与编辑。</p>
+      </div>
+      <div class="hl hl--v20">
+        <div class="hl__icon">🚧</div>
+        <h4>仍在探索中</h4>
+        <p>当前为产品方向的低保真示意，正式版本上线时间敬请期待。</p>
       </div>
     </div>
   </section>
