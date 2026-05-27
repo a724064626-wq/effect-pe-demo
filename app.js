@@ -340,6 +340,7 @@ const STK_EMOJI = {
   'STK_2037_heart':   ['💗', '💕', '💖'],
 };
 const REF_AUTO_STK = ['🌸', '✨', '💫']; // AI识别后默认贴纸视觉
+const REF_GEN_STK = ['🦋', '💎', '🌷']; // AI 原创生成贴纸视觉（与识别复刻区分）
 
 const v05Run = $('#v05Run');
 const v05Log = $('#v05Log');
@@ -364,6 +365,8 @@ async function runV05() {
   v05Run.innerHTML = '⏳ 正在解析...';
 
   v05Log.innerHTML = '';
+  const phoneWrapReset = v05Screen.parentElement;
+  if (phoneWrapReset) phoneWrapReset.classList.remove('preview__phone--dual');
   v05Screen.innerHTML = '<div class="preview__placeholder">解析中...</div>';
   v05Caption.textContent = '— 处理中 —';
   v05Export.innerHTML = '<div class="export__placeholder">运行后将生成剪映特效资源包</div>';
@@ -405,10 +408,72 @@ async function runV05() {
     logLine(v05Log, `[${ts}] ✓ 加载参考素材 reference_clip.mp4 (00:12, 1080×1920)`, 'log__line--ok');
     await sleep(350);
     logLine(v05Log, `[${ts}] 🔍 AI 识别参考素材中的贴纸效果...`, 'log__line--info');
-    await sleep(550);
+    await sleep(450);
     logLine(v05Log, `[${ts}]   ✓ 检出 3 个贴纸图层 + 位置 + 动效曲线`, 'log__line--ok');
-    stkInfo = '路线 A · 参考素材识别';
-    stkVisual = REF_AUTO_STK;
+    await sleep(300);
+    logLine(v05Log, `[${ts}] 🎨 AI 原创生成同主题贴纸方案...`, 'log__line--info');
+    await sleep(500);
+    logLine(v05Log, `[${ts}]   ✓ 生成 3 个原创贴纸资产 (主题: 同源风格)`, 'log__line--ok');
+    await sleep(250);
+    logLine(v05Log, `[${ts}] ⚙ 双方案并行渲染中...`, 'log__line--warn');
+    await sleep(550);
+
+    const colors = FILTER_COLORS[fltInput] || FILTER_COLORS['FLT_dusk_warm'];
+    const fltLabel = fltAuto ? 'AI 滤镜' : fltInput.split('_').slice(-1)[0];
+    const buildScene = (visual, tag) => `
+      <div class="scene" style="background: radial-gradient(circle at 30% 30%, ${colors[0]}, ${colors[1]});">
+        <div class="scene__face"></div>
+        <div class="scene__filter-overlay" style="background: linear-gradient(160deg, ${colors[0]}55, ${colors[1]}55);"></div>
+        <div class="scene__sticker" style="top: 30%; left: 22%;">${visual[0]}</div>
+        <div class="scene__sticker" style="top: 26%; right: 22%; animation-delay: .15s;">${visual[1]}</div>
+        <div class="scene__sticker" style="top: 70%; left: 50%; transform: translateX(-50%); animation-delay: .3s;">${visual[2]}</div>
+        <div class="scene__label">${tag} · ${fltLabel}</div>
+      </div>`;
+
+    // Replace single phone preview with a dual-candidate selector
+    const phoneWrap = v05Screen.parentElement; // .preview__phone
+    phoneWrap.classList.add('preview__phone--dual');
+    v05Screen.innerHTML = `
+      <div class="dual">
+        <div class="dual__card" data-pick="reco">
+          <div class="dual__badge">方案 A · 识别复刻</div>
+          <div class="dual__phone">${buildScene(REF_AUTO_STK, '识别复刻')}</div>
+          <div class="dual__desc">基于参考素材 1:1 还原贴纸位置与动效</div>
+          <button class="dual__pick">选择此方案</button>
+        </div>
+        <div class="dual__card" data-pick="gen">
+          <div class="dual__badge dual__badge--gen">方案 B · AI 原创生成</div>
+          <div class="dual__phone">${buildScene(REF_GEN_STK, 'AI 原创')}</div>
+          <div class="dual__desc">同主题原创贴纸，规避版权风险，风格更自由</div>
+          <button class="dual__pick dual__pick--gen">选择此方案</button>
+        </div>
+      </div>
+    `;
+    v05Caption.textContent = '双方案已生成 · 请选择一套作为最终产出';
+    logLine(v05Log, `[${ts}] ✓ 双方案渲染完成 · 等待用户选择`, 'log__line--ok');
+
+    v05Export.innerHTML = '<div class="export__placeholder">👈 请先在预览区选择一套方案，再生成剪映特效资源包</div>';
+
+    // Wire up selection
+    const cards = v05Screen.querySelectorAll('.dual__card');
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const pick = card.dataset.pick;
+        cards.forEach(c => c.classList.toggle('dual__card--active', c === card));
+        const picked = pick === 'reco'
+          ? { info: '路线 A · 参考素材识别复刻', tag: '识别复刻', visual: REF_AUTO_STK }
+          : { info: '路线 A · AI 原创生成贴纸', tag: 'AI 原创', visual: REF_GEN_STK };
+        finalizeV05Export(picked, { fltAuto, fltInput, muaAuto, muaInput, effAuto, effInput, posLabel });
+        const ts2 = new Date().toLocaleTimeString('zh-CN', { hour12: false });
+        logLine(v05Log, `[${ts2}] 👉 用户选定：${picked.info}`, 'log__line--ok');
+        logLine(v05Log, `[${ts2}] 📦 打包剪映特效资源包...`, 'log__line--info');
+        logLine(v05Log, `[${ts2}] ✓ 完成 ✓ 准备就绪`, 'log__line--ok');
+      });
+    });
+
+    v05Run.disabled = false;
+    v05Run.innerHTML = '⚡ 一键复刻';
+    return;
   } else {
     const stk = $('#stkId').value.trim() || 'STK_2034_sparkle';
     logLine(v05Log, `[${ts}] → 解析手动指定贴纸 ID: ${stk}`);
@@ -503,6 +568,30 @@ async function runV05() {
 }
 
 v05Run?.addEventListener('click', runV05);
+
+function finalizeV05Export(picked, opts) {
+  const { fltAuto, fltInput, muaAuto, muaInput, effAuto, effInput, posLabel } = opts;
+  v05Caption.textContent = `${picked.info} · ${fltAuto ? 'AI 滤镜' : fltInput} · ${muaAuto ? 'AI 妆容' : muaInput} · ${effAuto ? 'AI 特效' : effInput}`;
+  v05Export.innerHTML = `
+    <div class="export__pkg">
+      <div class="export__head">
+        <div class="export__icon">📦</div>
+        <div>
+          <div class="export__name">effect_pkg_${Date.now().toString().slice(-6)}.jianying</div>
+          <div class="export__size">2.4 MB · 标准剪映特效包 · ${picked.tag}</div>
+        </div>
+      </div>
+      <ul class="export__items">
+        <li><span>STK</span><b>${picked.info}</b></li>
+        <li><span>POS</span><b>${posLabel}</b></li>
+        <li><span>FLT</span><b>${fltAuto ? '🤖 AI 自动匹配' : fltInput}</b></li>
+        <li><span>MUA</span><b>${muaAuto ? '🤖 AI 自动匹配' : muaInput}</b></li>
+        <li><span>EFF</span><b>${effAuto ? '🤖 AI 自动匹配' : effInput}</b></li>
+      </ul>
+      <button class="btn btn--export">⬆ 一键上传至 Vimo</button>
+    </div>
+  `;
+}
 
 /* =====================================================================
    V1.0 · 标准版  ·  对话式 AI BOT

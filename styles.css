@@ -487,6 +487,31 @@ button{ font-family: inherit; cursor: pointer; border: none; background: none; c
   display: flex; align-items: center; justify-content: center;
   flex-wrap: wrap; gap: 10px; margin: 0 auto 46px;
 }
+/* V1.0 stepper: keep single-row, allow horizontal scroll on narrow screens */
+.flow--v10{
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 12px 14px;
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* IE/Edge legacy */
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+.flow--v10::-webkit-scrollbar{ display: none; }   /* Chrome/Safari */
+.flow--v10 .flow__step,
+.flow--v10 .flow__arrow{
+  flex: 0 0 auto;                 /* never shrink, never wrap */
+  white-space: nowrap;
+  scroll-snap-align: start;
+}
+/* Defensive: a trailing arrow (e.g., wrap edge) must never show */
+.flow--v10 .flow__arrow:last-child{ display: none; }
+@media (min-width: 1100px){
+  /* Wide enough → center the row */
+  .flow--v10{ justify-content: center; overflow-x: visible; }
+}
 .flow__step{
   display: inline-flex; align-items: center; gap: 10px;
   padding: 12px 18px; border-radius: 999px;
@@ -1127,6 +1152,102 @@ button{ font-family: inherit; cursor: pointer; border: none; background: none; c
   background: rgba(0,0,0,0.55); backdrop-filter: blur(8px);
   font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
   white-space: nowrap;
+}
+
+/* DUAL CANDIDATE SELECTOR (V0.5 · Route A) */
+.preview__phone--dual{
+  width: auto; height: auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+}
+.preview__phone--dual .preview__screen{
+  background: transparent;
+  height: auto;
+  display: block;
+  padding: 0;
+}
+.dual{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.dual__card{
+  position: relative;
+  display: flex; flex-direction: column; align-items: stretch;
+  gap: 10px;
+  padding: 12px 12px 14px;
+  border-radius: 18px;
+  border: 1.5px solid rgba(255,255,255,0.10);
+  background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+  cursor: pointer;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.dual__card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(255,122,89,0.45);
+  box-shadow: 0 14px 36px rgba(255,122,89,0.18);
+}
+.dual__card--active{
+  border-color: var(--v05-1);
+  box-shadow: 0 0 0 2px rgba(255,122,89,0.35), 0 18px 40px rgba(255,122,89,0.25);
+}
+.dual__card--active::after{
+  content: '✓ 已选';
+  position: absolute; top: 10px; right: 10px;
+  padding: 3px 8px; border-radius: 999px;
+  background: var(--v05-1); color: #2a0e00;
+  font-size: 10px; font-weight: 700;
+}
+.dual__badge{
+  align-self: flex-start;
+  padding: 4px 10px; border-radius: 999px;
+  background: rgba(255,122,89,0.16);
+  border: 1px solid rgba(255,122,89,0.35);
+  color: #ffb29a;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.dual__badge--gen{
+  background: rgba(110,139,255,0.16);
+  border-color: rgba(110,139,255,0.35);
+  color: #b5c4ff;
+}
+.dual__phone{
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #0a0a14;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.dual__desc{
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.5;
+  min-height: 32px;
+}
+.dual__pick{
+  width: 100%;
+  padding: 8px 10px;
+  border: none; border-radius: 10px;
+  background: linear-gradient(135deg, var(--v05-1), var(--v05-2));
+  color: #2a0e00;
+  font-weight: 700; font-size: 12px;
+  cursor: pointer;
+  transition: filter .2s ease;
+}
+.dual__pick--gen{
+  background: linear-gradient(135deg, #6e8bff, #b66bff);
+  color: white;
+}
+.dual__pick:hover{ filter: brightness(1.08); }
+.dual__card--active .dual__pick{ filter: brightness(1.1); }
+@media (max-width: 720px){
+  .dual{ grid-template-columns: 1fr; }
 }
 
 /* LOG */
