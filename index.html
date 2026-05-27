@@ -158,7 +158,7 @@
         <div class="rm__dot"></div>
         <div class="rm__tag">V0.5</div>
         <h3>极速版（内部应急）</h3>
-        <p>侧重于<b>组合硬指令</b>（贴纸 / 滤镜 / 妆容 ID）解析与复刻；支持 15s 以内视频和截图输入；无画布编辑。</p>
+        <p>侧重于<b>组合硬指令</b>（贴纸 / 滤镜 / 妆容 / 画面特效 ID）解析与复刻；支持 15s 以内视频和截图输入；无画布编辑。</p>
         <span class="rm__chip">Phase 1 · 进行中</span>
       </div>
       <div class="rm rm--next">
@@ -185,7 +185,7 @@
       <h2>双路输入 · 极速复刻</h2>
       <p class="section__lead">
         贴纸支持两条独立输入路线 —— <b>路线 A：上传参考视频/截图</b>（AI 自动识别复刻已有贴纸，或基于参考素材原创生成全新贴纸），<b>路线 B：手动指定贴纸 ID</b>。<br/>
-        滤镜与妆容 ID 在两条路线下都可选填，留空则由 AI 自动匹配最优组合。
+        滤镜 / 妆容 / 画面特效 ID 在两条路线下都可选填，留空则由 AI 自动匹配最优组合。
       </p>
     </div>
 
@@ -245,28 +245,43 @@
               <label>贴纸 <span class="id-pill">STK</span> <span class="required">必填</span></label>
               <input class="id-input" id="stkId" type="text" value="STK_2034_sparkle" placeholder="输入精确 ID 或名称模糊搜索（如「樱花」）" autocomplete="off" />
             </div>
+            <div class="id-group id-group--inline" data-kind="POS">
+              <label>位置 <span class="id-pill id-pill--pos">POS</span> <span class="optional">可选</span></label>
+              <select class="id-select" id="stkPos">
+                <option value="default" selected>默认（参考原效 / 居中）</option>
+                <option value="face_track">人脸跟随</option>
+                <option value="top_left">左上角</option>
+                <option value="top">顶部居中</option>
+                <option value="top_right">右上角</option>
+                <option value="center">画面正中</option>
+                <option value="bottom_left">左下角</option>
+                <option value="bottom">底部居中</option>
+                <option value="bottom_right">右下角</option>
+              </select>
+            </div>
             <details class="info-hint info-hint--collapsible">
               <summary class="info-hint__summary">
-                <span class="info-hint__summary-text"><span>🔍</span> 查看支持的输入方式与检索说明</span>
+                <span class="info-hint__summary-text">查看支持的输入方式与检索说明</span>
                 <span class="info-hint__chevron" aria-hidden="true">▾</span>
               </summary>
               <ul class="info-hint__list">
                 <li>直接粘贴精确 ID，例如 <code class="hint-code">STK_2034_sparkle</code></li>
                 <li>输入名称（如「樱花」「星光」），系统会模糊匹配 Top 3 候选供选择</li>
+                <li>位置默认沿用参考素材原效；如需固定可选「人脸跟随 / 四角 / 顶底」</li>
               </ul>
             </details>
           </div>
 
-          <!-- Shared : FLT + MUA optional -->
-          <h4 class="panel__title" style="margin-top:24px;">③ 滤镜 / 妆容 <span class="panel__hint">可选 · 留空由 AI 匹配 · 支持名称模糊搜索</span></h4>
+          <!-- Shared : FLT + MUA + EFF optional -->
+          <h4 class="panel__title" style="margin-top:24px;">③ 滤镜 / 妆容 / 画面特效 <span class="panel__hint">可选 · 留空由 AI 匹配 · 支持名称模糊搜索</span></h4>
           <details class="info-hint info-hint--shared info-hint--collapsible">
             <summary class="info-hint__summary">
-              <span class="info-hint__summary-text"><span>💡</span> 滤镜 / 妆容 检索方式说明</span>
+              <span class="info-hint__summary-text">滤镜 / 妆容 / 画面特效 检索方式说明</span>
               <span class="info-hint__chevron" aria-hidden="true">▾</span>
             </summary>
             <ul class="info-hint__list">
-              <li>输入精确 ID（如 <code class="hint-code">FLT_dusk_warm</code> / <code class="hint-code">MUA_softgloss_v3</code>）直接命中</li>
-              <li>输入名称（如「暮光」「霓虹」「软光」「红唇」）系统自动给出 Top 3 候选</li>
+              <li>输入精确 ID（如 <code class="hint-code">FLT_dusk_warm</code> / <code class="hint-code">MUA_softgloss_v3</code> / <code class="hint-code">EFF_shake</code>）直接命中</li>
+              <li>输入名称（如「暮光」「红唇」「抖动」「马赛克」「模糊」）系统自动给出 Top 3 候选</li>
               <li>留空或点击 🤖 AI 自动 → 由系统智能匹配最优组合</li>
             </ul>
           </details>
@@ -285,6 +300,14 @@
               <button class="ai-toggle" data-target="muaId" type="button">🤖 AI 自动</button>
             </label>
             <input class="id-input" id="muaId" type="text" value="MUA_softgloss_v3" placeholder="ID 或名称（如「软光」「裸妆」）· 留空 AI 匹配" autocomplete="off" />
+          </div>
+          <div class="id-group" data-kind="EFF">
+            <label>
+              画面特效 <span class="id-pill id-pill--d">EFF</span>
+              <span class="optional">可选</span>
+              <button class="ai-toggle" data-target="effId" type="button">🤖 AI 自动</button>
+            </label>
+            <input class="id-input" id="effId" type="text" value="" placeholder="ID 或名称（如「抖动」「马赛克」「模糊」）· 留空 AI 匹配" autocomplete="off" />
           </div>
 
           <button class="btn btn--primary btn--full" id="v05Run">⚡ 一键复刻</button>
@@ -326,7 +349,7 @@
       <div class="hl">
         <div class="hl__icon">🤖</div>
         <h4>AI 智能补全</h4>
-        <p>滤镜与妆容 ID 留空时，AI 自动匹配最优组合，零配置也可产出。</p>
+        <p>滤镜 / 妆容 / 画面特效 ID 留空时，AI 自动匹配最优组合，零配置也可产出。</p>
       </div>
       <div class="hl">
         <div class="hl__icon">📦</div>

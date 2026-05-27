@@ -120,7 +120,7 @@ uploadBox?.addEventListener('click', () => {
   setTimeout(() => { uploadBox.style.borderColor = ''; }, 1500);
 });
 
-// AI auto toggle for FLT / MUA
+// AI auto toggle for FLT / MUA / EFF
 $$('.ai-toggle').forEach(btn => {
   btn.addEventListener('click', () => {
     const targetId = btn.dataset.target;
@@ -130,7 +130,8 @@ $$('.ai-toggle').forEach(btn => {
     if (isOn) {
       input.dataset.prevValue = input.value;
       input.value = '';
-      input.placeholder = '🤖 AI 将自动匹配最优 ' + (targetId === 'fltId' ? '滤镜' : '妆容');
+      const labelMap = { fltId: '滤镜', muaId: '妆容', effId: '画面特效' };
+      input.placeholder = '🤖 AI 将自动匹配最优 ' + (labelMap[targetId] || '');
       input.classList.add('id-input--auto');
       input.disabled = true;
       btn.textContent = '✓ AI 接管';
@@ -145,7 +146,7 @@ $$('.ai-toggle').forEach(btn => {
   });
 });
 
-/* ============ Fuzzy Name Search (STK / FLT / MUA) ============ */
+/* ============ Fuzzy Name Search (STK / FLT / MUA / EFF) ============ */
 
 const ASSET_CATALOG = {
   STK: [
@@ -174,11 +175,23 @@ const ASSET_CATALOG = {
     { id: 'MUA_korean_pure',    name: '韩系清纯',   tags: ['韩系','清纯','korean','纯','软'], emoji: '🌷', bg: ['#ffe0eb','#fff5f5'] },
     { id: 'MUA_red_lip_classic',name: '经典红唇',   tags: ['红唇','经典','red','复古','气场'], emoji: '💋', bg: ['#ff8d8d','#d63b3b'] },
   ],
+  EFF: [
+    { id: 'EFF_shake',         name: '抖动震屏',     tags: ['抖动','震屏','shake','震动','晃动','rumble'], emoji: '📳', bg: ['#ffb88c','#ff5e5e'] },
+    { id: 'EFF_mosaic',        name: '马赛克遮挡',   tags: ['马赛克','像素','mosaic','pixelate','打码','遮挡'], emoji: '🟪', bg: ['#a86bff','#5b3dbf'] },
+    { id: 'EFF_blur',          name: '模糊朦胧',     tags: ['模糊','朦胧','blur','虚化','失焦','梦幻'], emoji: '🌫', bg: ['#9ad6ff','#c5b3ff'] },
+    { id: 'EFF_wait',           name: '等待加载',     tags: ['等待','加载','wait','loading','转圈','缓冲','沙漏'], emoji: '⏳', bg: ['#ffe4a8','#ffb88c'] },
+    { id: 'EFF_halo',          name: '光晕泛光',     tags: ['光晕','泛光','halo','glow','光斑','梦幻'], emoji: '🌟', bg: ['#fff5cf','#ffd166'] },
+    { id: 'EFF_glitch',        name: '故障特效',     tags: ['故障','glitch','错位','干扰','rgb','赛博'], emoji: '⚡', bg: ['#ff5cd5','#5b3dbf'] },
+    { id: 'EFF_snow',          name: '飘雪粒子',     tags: ['飘雪','雪','snow','粒子','冬天','冷'], emoji: '❄️', bg: ['#e0f7ff','#c5b3ff'] },
+    { id: 'EFF_zoom_punch',    name: '推拉变焦',     tags: ['推拉','变焦','zoom','punch','节奏','卡点'], emoji: '🎯', bg: ['#ffb88c','#ff7c5e'] },
+    { id: 'EFF_rgb_split',     name: 'RGB 错位',     tags: ['rgb','错位','split','色散','故障'], emoji: '🌈', bg: ['#ff5e5e','#5b9dff'] },
+    { id: 'EFF_lightleak',     name: '漏光闪烁',     tags: ['漏光','闪烁','lightleak','flash','闪光'], emoji: '✨', bg: ['#ffd6a8','#ff7c5e'] },
+  ],
 };
 
-// Detect if input looks like a precise ID (e.g. STK_xxx, FLT_xxx, MUA_xxx)
+// Detect if input looks like a precise ID (e.g. STK_xxx, FLT_xxx, MUA_xxx, EFF_xxx, FX_xxx)
 function looksLikeId(value) {
-  return /^(STK|FLT|MUA)_[A-Za-z0-9_]+$/i.test(value.trim());
+  return /^(STK|FLT|MUA|EFF|FX)_[A-Za-z0-9_]+$/i.test(value.trim());
 }
 
 // Simple fuzzy scoring: substring match in id/name/tags (case-insensitive)
@@ -289,7 +302,7 @@ function highlight(text, query) {
 }
 function escapeRegExp(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
-// Bind search behavior to STK / FLT / MUA inputs
+// Bind search behavior to STK / FLT / MUA / EFF inputs
 function bindSearchInput(inputId, kind) {
   const input = $(`#${inputId}`);
   if (!input) return;
@@ -310,6 +323,7 @@ function bindSearchInput(inputId, kind) {
 bindSearchInput('stkId', 'STK');
 bindSearchInput('fltId', 'FLT');
 bindSearchInput('muaId', 'MUA');
+bindSearchInput('effId', 'EFF');
 
 // Filter + sticker assets
 const FILTER_COLORS = {
@@ -357,11 +371,30 @@ async function runV05() {
   let stkInfo, stkVisual;
   let fltInput = $('#fltId').value.trim();
   let muaInput = $('#muaId').value.trim();
+  let effInput = $('#effId').value.trim();
   const fltAuto = $('#fltId').classList.contains('id-input--auto') || !fltInput;
   const muaAuto = $('#muaId').classList.contains('id-input--auto') || !muaInput;
+  const effAuto = $('#effId').classList.contains('id-input--auto') || !effInput;
 
   if (fltAuto) fltInput = 'FLT_AI_auto';
   if (muaAuto) muaInput = 'MUA_AI_auto';
+  if (effAuto) effInput = 'EFF_AI_auto';
+
+  // Position selector (only meaningful for Route B; ignored for Route A which uses reference clip mapping)
+  const posSelect = $('#stkPos');
+  const posValue = posSelect ? posSelect.value : 'default';
+  const POS_LABELS = {
+    default: '默认（参考原效 / 居中）',
+    face_track: '人脸跟随',
+    top_left: '左上角',
+    top: '顶部居中',
+    top_right: '右上角',
+    center: '画面正中',
+    bottom_left: '左下角',
+    bottom: '底部居中',
+    bottom_right: '右下角',
+  };
+  const posLabel = POS_LABELS[posValue] || POS_LABELS.default;
 
   const ts = new Date().toISOString().substring(11, 19);
 
@@ -381,6 +414,11 @@ async function runV05() {
     logLine(v05Log, `[${ts}] → 解析手动指定贴纸 ID: ${stk}`);
     await sleep(400);
     logLine(v05Log, `[${ts}]   ✓ 命中资源库，加载 3 个贴纸资产`, 'log__line--ok');
+    if (posValue !== 'default') {
+      logLine(v05Log, `[${ts}]   ✓ 应用位置策略: ${posLabel}`, 'log__line--ok');
+    } else {
+      logLine(v05Log, `[${ts}]   · 位置策略: ${posLabel}`);
+    }
     stkInfo = stk;
     stkVisual = STK_EMOJI[stk] || ['✨', '💫', '⭐'];
   }
@@ -406,6 +444,17 @@ async function runV05() {
     await sleep(280);
     logLine(v05Log, `[${ts}]   ✓ 应用妆容图层`, 'log__line--ok');
   }
+  await sleep(250);
+
+  if (effAuto) {
+    logLine(v05Log, `[${ts}] 🤖 AI 自动匹配画面特效...`, 'log__line--info');
+    await sleep(450);
+    logLine(v05Log, `[${ts}]   ✓ 推荐 EFF_AI_auto (基于节奏 + 内容情绪分析)`, 'log__line--ok');
+  } else {
+    logLine(v05Log, `[${ts}] → 应用画面特效 ID: ${effInput}`);
+    await sleep(280);
+    logLine(v05Log, `[${ts}]   ✓ 应用画面特效图层`, 'log__line--ok');
+  }
   await sleep(350);
   logLine(v05Log, `[${ts}] ⚙ 渲染合成中...`, 'log__line--warn');
   await sleep(550);
@@ -421,7 +470,7 @@ async function runV05() {
       <div class="scene__label">${v05Route === 'A' ? 'AI 识别' : '手动 ID'} · ${fltAuto ? 'AI 滤镜' : fltInput.split('_').slice(-1)[0]}</div>
     </div>
   `;
-  v05Caption.textContent = `${stkInfo} · ${fltAuto ? 'AI 滤镜' : fltInput} · ${muaAuto ? 'AI 妆容' : muaInput}`;
+  v05Caption.textContent = `${stkInfo} · ${fltAuto ? 'AI 滤镜' : fltInput} · ${muaAuto ? 'AI 妆容' : muaInput} · ${effAuto ? 'AI 特效' : effInput}`;
 
   logLine(v05Log, `[${ts}] ✓ 渲染完成 · 用时 1.8s`, 'log__line--ok');
   await sleep(250);
@@ -440,8 +489,10 @@ async function runV05() {
       </div>
       <ul class="export__items">
         <li><span>STK</span><b>${stkInfo}</b></li>
+        <li><span>POS</span><b>${posLabel}</b></li>
         <li><span>FLT</span><b>${fltAuto ? '🤖 AI 自动匹配' : fltInput}</b></li>
         <li><span>MUA</span><b>${muaAuto ? '🤖 AI 自动匹配' : muaInput}</b></li>
+        <li><span>EFF</span><b>${effAuto ? '🤖 AI 自动匹配' : effInput}</b></li>
       </ul>
       <button class="btn btn--export">⬆ 一键上传至 Vimo</button>
     </div>
